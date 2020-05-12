@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package product.internal.proto_files.domain;
+
+import "google/protobuf/timestamp.proto";
+
+/* set where the generate Go code will be placed */
+option go_package = "internal/grpc/domain_service";
+
+message Product {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+  string slug = 5;
+  bool active = 6;
+  bool in_stock = 7; // how to make the field true by default as against false
+  google.protobuf.Timestamp date_updated = 8;
+}

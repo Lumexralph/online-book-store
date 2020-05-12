@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package product.internal.proto_files.service;
+
+import "internal/proto_files/domain/product.proto";
+
+option go_package = "internal/grpc/domain_service";
+
+// ProductService definition to handle our products.
+service ProductService {
+    rpc AddProduct (AddProductRequest) returns (AddProductResponse);
+}
+
+// AddClient Request and Response
+message AddProductRequest {
+    domain.Product product = 1;
+}
+
+message AddProductResponse {
+    domain.Product created_product = 1;
+}
