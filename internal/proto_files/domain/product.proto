@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+// TODO: add protobuf linter and dependency manager
+// ref: https://medium.com/stackpulse/grpc-in-practice-directory-structure-linting-and-more-d4d438ac4f86
 package product.internal.proto_files.domain;
 
 import "google/protobuf/timestamp.proto";
