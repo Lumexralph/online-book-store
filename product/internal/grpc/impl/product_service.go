@@ -25,8 +25,10 @@ func (p *ProductService) AddProduct(ctx context.Context, in *domain.AddProductRe
 	err := p.store.CreateProduct(in)
 	if err != nil {
 		fmt.Println(err)
+		return nil, err
 	}
 
+	fmt.Println("product created")
 	return &domain.AddProductResponse{
 		CreatedProduct: nil,
 	}, err
