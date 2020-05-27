@@ -1,22 +1,22 @@
-//Package datastore is the implementation of the database session
+// Package postgres is the implementation of the database session
 // in use by the server
 package postgres
 
 import (
-	"database/sql"
-	domain "product/internal/grpc/domain_service"
+	"product/internal/grpc/domain"
 
-	// register driver needed for postgreSQL
-	_ "github.com/lib/pq"
+	"github.com/jinzhu/gorm"
+	//  need it for the side effects of gorm for postgres
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 // ProductStore encapsulates a db connection with the operations
 type ProductStore struct {
-	DB *sql.DB
+	DB *gorm.DB
 }
 
 // CreateProduct will take the data from the stored file
 // and persist it to the database
-func (p ProductStore) CreateProduct(product *domain.AddProductRequest) error {
-	return nil
+func (p ProductStore) CreateProduct(product *domain.Product) (*domain.Product, error) {
+	return nil, nil
 }
