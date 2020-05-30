@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/Lumexralph/article-maker v0.0.0-20200225164507-0e08e9be13c9 // indirect
+	github.com/favadi/protoc-go-inject-tag v1.0.0 // indirect
 	github.com/golang/protobuf v1.4.1
 	github.com/jinzhu/gorm v1.9.12
 	github.com/joho/godotenv v1.3.0

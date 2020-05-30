@@ -26,7 +26,7 @@ const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 type Product struct {
 	// @inject_tag: gorm:"primary_key"
-	Id          uint64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id          uint64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" gorm:"primary_key"`
 	Name        string  `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Description string  `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 	Price       float64 `protobuf:"fixed64,4,opt,name=price,proto3" json:"price,omitempty"`
@@ -34,11 +34,11 @@ type Product struct {
 	InActive    bool    `protobuf:"varint,6,opt,name=in_active,json=inActive,proto3" json:"in_active,omitempty"`
 	OutOfStock  bool    `protobuf:"varint,7,opt,name=out_of_stock,json=outOfStock,proto3" json:"out_of_stock,omitempty"`
 	// @inject_tag: gorm:"type:timestamp"
-	CreatedAt *Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt *Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty" gorm:"type:timestamp"`
 	// @inject_tag: gorm:"type:timestamp"
-	UpdatedAt *Timestamp `protobuf:"bytes,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	UpdatedAt *Timestamp `protobuf:"bytes,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty" gorm:"type:timestamp"`
 	// @inject_tag: gorm:"type:timestamp"
-	DeletedAt            *Timestamp `protobuf:"bytes,10,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
+	DeletedAt            *Timestamp `protobuf:"bytes,10,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty" gorm:"type:timestamp"`
 	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
 	XXX_unrecognized     []byte     `json:"-"`
 	XXX_sizecache        int32      `json:"-"`
