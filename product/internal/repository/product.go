@@ -5,10 +5,10 @@
 package repository
 
 import (
-	domain "product/internal/grpc/domain_service"
+	"product/internal/grpc/domain"
 )
 
 // ProductRepository interface that any database/datastore component implementation have to provide.
 type ProductRepository interface {
-	CreateProduct(*domain.AddProductRequest) error
+	CreateProduct(*domain.Product) (*domain.Product, error)
 }

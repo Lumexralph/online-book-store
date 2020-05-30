@@ -6,14 +6,14 @@ import (
 	"log"
 	"time"
 
-	domain "product/internal/grpc/domain_service"
+	"product/internal/grpc/domain"
 
 	"github.com/golang/protobuf/ptypes"
 
 	"google.golang.org/grpc"
 )
 
-const address = ":5000"
+const address = ":5001"
 
 func main() {
 	// make a grpc server connection
@@ -27,14 +27,12 @@ func main() {
 
 	product := &domain.AddProductRequest{
 		Product: &domain.Product{
-			Id:          "1",
+			Id:          1,
 			Name:        "Sherlock Holmes",
 			Description: "It is an investigative book",
 			Price:       123.56,
 			Slug:        "sherlock-holmes",
-			Active:      true,
-			InStock:     true,
-			DateUpdated: ptypes.TimestampNow(),
+			CreatedAt:   &domain.Timestamp{Timestamp: ptypes.TimestampNow()},
 		},
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)

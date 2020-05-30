@@ -7,15 +7,25 @@ package product.internal.proto_files.domain;
 import "google/protobuf/timestamp.proto";
 
 /* set where the generate Go code will be placed */
-option go_package = "internal/grpc/domain_service";
+option go_package = "internal/grpc/domain";
 
 message Product {
-  string id = 1;
+  // @inject_tag: gorm:"primary_key"
+  uint64 id = 1;
   string name = 2;
   string description = 3;
   double price = 4;
   string slug = 5;
-  bool active = 6;
-  bool in_stock = 7; // how to make the field true by default as against false
-  google.protobuf.Timestamp date_updated = 8;
+  bool in_active = 6;
+  bool out_of_stock = 7;
+  // @inject_tag: gorm:"type:timestamp"
+  Timestamp created_at = 8;
+  // @inject_tag: gorm:"type:timestamp"
+  Timestamp updated_at = 9;
+  // @inject_tag: gorm:"type:timestamp"
+  Timestamp deleted_at = 10;
+}
+
+message Timestamp {
+  google.protobuf.Timestamp timestamp = 1;
 }

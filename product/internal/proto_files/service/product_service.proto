@@ -4,7 +4,7 @@ package product.internal.proto_files.service;
 
 import "internal/proto_files/domain/product.proto";
 
-option go_package = "internal/grpc/domain_service";
+option go_package = "internal/grpc/domain";
 
 // ProductService definition to handle our products.
 service ProductService {

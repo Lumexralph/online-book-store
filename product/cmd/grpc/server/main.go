@@ -2,19 +2,20 @@
 package main
 
 import (
-	"net"
 	"fmt"
-	"os"
 	"log"
-	"google.golang.org/grpc"
+	"net"
+	"os"
+	"product/internal/datastore/migrations"
 	"product/internal/datastore/postgres"
+	"product/internal/grpc/domain"
 	service "product/internal/grpc/impl"
-	domain "product/internal/grpc/domain_service"
 
-	_ "github.com/joho/godotenv/autoload"
+	"github.com/joho/godotenv"
+	"google.golang.org/grpc"
 )
 
-const port = ":5000"
+const port = ":5001"
 
 func main() {
 	if err := run(); err != nil {
@@ -22,21 +23,22 @@ func main() {
 	}
 }
 
+// run - where the world begins!
 func run() error {
+	godotenv.Load("../../../.env")
 	host := os.Getenv("DB_HOST")
 	dbport := os.Getenv("DB_PORT")
-	user := os.Getenv("DB_USER")
-	password := os.Getenv("DB_PASSWORD")
+	dbuser := os.Getenv("DB_USER")
+	passwd := os.Getenv("DB_PASSWORD")
 	dbname := os.Getenv("DB_NAME")
 	sslmode := os.Getenv("DB_SSLMODE")
-
 	// create database url
 	connStr := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		host,
 		dbport,
-		user,
-		password,
+		dbuser,
+		passwd,
 		dbname,
 		sslmode,
 	)
@@ -44,7 +46,14 @@ func run() error {
 	if err != nil {
 		return err
 	}
+	log.Println("postres: database connected!")
 	defer teardown()
+
+	// run migrations
+	err = migrations.Migrate(db)
+	if err != nil {
+		log.Fatalf("failed to run migration: %v\n", err)
+	}
 
 	// product service store
 	prodStore := postgres.ProductStore{
