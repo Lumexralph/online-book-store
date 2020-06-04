@@ -56,9 +56,7 @@ func run() error {
 	}
 
 	// product service store
-	prodStore := postgres.ProductStore{
-		DB: db,
-	}
+	prodStore := postgres.NewProductStore(db)
 	// new product service
 	srv := service.NewProductService(prodStore)
 	// create grpc server

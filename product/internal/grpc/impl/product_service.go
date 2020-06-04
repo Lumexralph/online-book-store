@@ -4,6 +4,7 @@ package impl
 import (
 	"context"
 	"fmt"
+	"log"
 	"product/internal/grpc/domain"
 	repo "product/internal/repository"
 )
@@ -24,15 +25,15 @@ func NewProductService(r repo.ProductRepository) *ProductService {
 // AddProduct method will create a new product.
 func (p *ProductService) AddProduct(ctx context.Context, in *domain.AddProductRequest) (*domain.AddProductResponse, error) {
 	// persist the product
-	_, err := p.store.CreateProduct(in.Product)
+	product, err := p.store.CreateProduct(in.Product)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
 
-	fmt.Println("product created")
+	log.Println("product created")
 	return &domain.AddProductResponse{
-		CreatedProduct: nil,
+		CreatedProduct: product,
 	}, err
 
 }
