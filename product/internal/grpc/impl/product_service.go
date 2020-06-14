@@ -3,14 +3,10 @@ package impl
 
 import (
 	"context"
-	"fmt"
-	"log"
 	"product/internal/grpc/domain"
 	repo "product/internal/repository"
 )
 
-// TODO: add protobuf linter and dependency manager
-// ref: https://medium.com/stackpulse/grpc-in-practice-directory-structure-linting-and-more-d4d438ac4f86
 // ProductService is an implementation of ProductServiceServer gRPC service.
 type ProductService struct {
 	// datastore
@@ -27,11 +23,9 @@ func (p *ProductService) AddProduct(ctx context.Context, in *domain.AddProductRe
 	// persist the product
 	product, err := p.store.CreateProduct(in.Product)
 	if err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
 
-	log.Println("product created")
 	return &domain.AddProductResponse{
 		CreatedProduct: product,
 	}, err

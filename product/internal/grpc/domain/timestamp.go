@@ -19,6 +19,9 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// Scan method is needed to implement the Scanner interface used by
+// by the sql package to read data from a database to a Go type.
+// ref: https://golang.org/pkg/database/sql/#Rows.Scan
 func (ts *Timestamp) Scan(value interface{}) error {
 	switch t := value.(type) {
 	case time.Time:
@@ -33,6 +36,12 @@ func (ts *Timestamp) Scan(value interface{}) error {
 	return nil
 }
 
+// Value method helps implement the Valuer interface to be able to
+// convert the protobuf Timestamp type to an sql driver Value because
+// Gorm also support the interface, it makes it possible to create this
+// field in the postgres database.
+// ref: https://golang.org/pkg/database/sql/driver/#Valuer
+//     https://gorm.io/docs/models.html#Declaring-Models
 func (ts Timestamp) Value() (driver.Value, error) {
 	return ptypes.Timestamp(ts.Timestamp)
 }

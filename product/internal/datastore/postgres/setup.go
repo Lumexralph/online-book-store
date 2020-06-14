@@ -24,13 +24,13 @@ func ConfigTestDatabase() (db *gorm.DB, dbTeardown func() error, err error) {
 
 	// create database url
 	connStr := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		"host=%s port=%s user=%s dbname=%s sslmode=%s password=%s",
 		host,
 		dbport,
 		dbuser,
-		passwd,
 		dbname,
 		sslmode,
+		passwd,
 	)
 	db, dbTeardown, err = Connect(connStr)
 	if err != nil {

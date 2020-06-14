@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/golang/protobuf/ptypes"
-	"github.com/google/go-cmp/cmp"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/stretchr/testify/assert"
@@ -45,13 +44,17 @@ func TestProductStore_CreateProduct(t *testing.T) {
 		want   *domain.Product
 	}{
 		{
-			name:   "create product",
+			name:   "successfully create product",
 			fields: field,
 			args:   arg,
 			want: &domain.Product{
 				Id:          1,
 				Name:        "Sherlock Holmes",
 				Description: "It is an investigative book",
+				Price:       123.56,
+				Slug:        "sherlock-holmes",
+				CreatedAt:   &domain.Timestamp{Timestamp: ptypes.TimestampNow()},
+				UpdatedAt:   &domain.Timestamp{Timestamp: ptypes.TimestampNow()},
 			},
 		},
 	}
@@ -59,10 +62,15 @@ func TestProductStore_CreateProduct(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewProductStore(tt.fields.DB)
 			got, err := s.CreateProduct(tt.args.product)
+			t.Log("got", got)
 			assert.Nilf(t, err, "ProductStore.CreateProduct() error = %v", err)
 
-			diff := cmp.Diff(tt.want, got)
-			assert.Equalf(t, "", diff, "ProductStore.CreateProduct()() mismatch (-want +got):\n%s", diff)
+			assert.Equalf(t, got.Id, tt.want.Id, "ProductStore.CreateProduct() got=%d; want=%d", got.Id, tt.want.Id)
+			assert.Equalf(t, got.Name, tt.want.Name, "ProductStore.CreateProduct() got=%d; want=%d", got.Name, tt.want.Name)
+			assert.Equalf(t, got.Description, tt.want.Description, "ProductStore.CreateProduct() got=%d; want=%d", got.Description, tt.want.Description)
+			assert.Equalf(t, got.Price, tt.want.Price, "ProductStore.CreateProduct() got=%d; want=%d", got.Price, tt.want.Price)
+			assert.Equalf(t, got.Slug, tt.want.Slug, "ProductStore.CreateProduct() got=%d; want=%d", got.Slug, tt.want.Slug)
+			assert.Equalf(t, got.CreatedAt, tt.want.CreatedAt, "ProductStore.CreateProduct() got=%d; want=%d", got.CreatedAt, tt.want.CreatedAt)
 		})
 	}
 
