@@ -11,6 +11,7 @@ import (
 
 	"github.com/golang/protobuf/ptypes"
 	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 )
 
 var mockStore = &repomock.ProductRepository{}
@@ -76,9 +77,12 @@ func TestProductService_AddProduct(t *testing.T) {
 				return
 			}
 
-			if diff := cmp.Diff(got, tt.want); diff != "" {
+			if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(domain.Timestamp{})); diff != "" {
 				t.Errorf("ProductService.AddProduct() mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}
+
+	// assert that the expectations were met
+	mockStore.AssertExpectations(t)
 }
