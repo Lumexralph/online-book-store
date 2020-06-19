@@ -32,21 +32,25 @@ func run() error {
 	passwd := os.Getenv("DB_PASSWORD")
 	dbname := os.Getenv("DB_NAME")
 	sslmode := os.Getenv("DB_SSLMODE")
+
 	// create database url
+	// NB: be careful to supply an empty string as password
+	// the connection url will not be properly formed, either
+	// remove it or supply it as the last parameter as done below.
 	connStr := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		"host=%s port=%s user=%s dbname=%s sslmode=%s password=%s",
 		host,
 		dbport,
 		dbuser,
-		passwd,
 		dbname,
 		sslmode,
+		passwd,
 	)
 	db, teardown, err := postgres.Connect(connStr)
 	if err != nil {
 		return err
 	}
-	log.Println("postres: database connected!")
+	log.Println("postres: database connected!", connStr)
 	defer teardown()
 
 	// run migrations
@@ -56,9 +60,7 @@ func run() error {
 	}
 
 	// product service store
-	prodStore := postgres.ProductStore{
-		DB: db,
-	}
+	prodStore := postgres.NewProductStore(db)
 	// new product service
 	srv := service.NewProductService(prodStore)
 	// create grpc server

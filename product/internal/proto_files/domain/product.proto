@@ -16,8 +16,8 @@ message Product {
   string description = 3;
   double price = 4;
   string slug = 5;
-  bool in_active = 6;
-  bool out_of_stock = 7;
+  bool inactive = 6;
+  uint64 quantity = 7;
   // @inject_tag: gorm:"type:timestamp"
   Timestamp created_at = 8;
   // @inject_tag: gorm:"type:timestamp"
