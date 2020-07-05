@@ -1,5 +1,5 @@
 // Package impl has the ProductService grpc server implementation.
-package impl
+package services
 
 import (
 	"context"

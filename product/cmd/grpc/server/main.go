@@ -9,7 +9,7 @@ import (
 	"product/internal/datastore/migrations"
 	"product/internal/datastore/postgres"
 	"product/internal/grpc/domain"
-	service "product/internal/grpc/impl"
+	"product/internal/grpc/services"
 
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
@@ -62,7 +62,7 @@ func run() error {
 	// product service store
 	prodStore := postgres.NewProductStore(db)
 	// new product service
-	srv := service.NewProductService(prodStore)
+	srv := services.NewProductService(prodStore)
 	// create grpc server
 	s := grpc.NewServer()
 	// register the ProductService implementation
