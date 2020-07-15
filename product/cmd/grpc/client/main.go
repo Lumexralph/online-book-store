@@ -32,6 +32,7 @@ func main() {
 			Description: "It is an investigative book",
 			Price:       123.56,
 			Slug:        "sherlock-holmes",
+			Quantity:    60,
 			CreatedAt:   &domain.Timestamp{Timestamp: ptypes.TimestampNow()},
 		},
 	}

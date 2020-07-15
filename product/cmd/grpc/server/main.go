@@ -50,7 +50,7 @@ func run() error {
 	if err != nil {
 		return err
 	}
-	log.Println("postres: database connected!", connStr)
+	log.Println("postres: database connected!")
 	defer teardown()
 
 	// run migrations

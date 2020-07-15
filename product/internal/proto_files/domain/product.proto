@@ -17,7 +17,7 @@ message Product {
   double price = 4;
   string slug = 5;
   bool inactive = 6;
-  uint64 out_of_stock = 7;
+  uint64 quantity = 7;
   // @inject_tag: gorm:"type:timestamp"
   Timestamp created_at = 8;
   // @inject_tag: gorm:"type:timestamp"
@@ -30,11 +30,6 @@ message Timestamp {
   google.protobuf.Timestamp timestamp = 1;
 }
 
-// ProductService definition to handle our products.
-service ProductService {
-  rpc AddProduct (AddProductRequest) returns (AddProductResponse);
-}
-
 // AddClient Request and Response
 message AddProductRequest {
   Product product = 1;
@@ -42,4 +37,9 @@ message AddProductRequest {
 
 message AddProductResponse {
   Product created_product = 1;
+}
+
+// ProductService definition to handle our products.
+service ProductService {
+  rpc AddProduct (AddProductRequest) returns (AddProductResponse);
 }
