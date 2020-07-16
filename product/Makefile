@@ -6,3 +6,6 @@ gen-proto :
 		@echo generate the Go code from protobuf
 		$(SHELL) build/proto-gen.sh
 
+gen-mocks :
+		@echo generating mocks for tests
+		$(SHELL) build/mock-gen.sh

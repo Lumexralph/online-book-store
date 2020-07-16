@@ -11,3 +11,5 @@
 * testify: A test toolkit with common assertions and mocks that plays nicely with the standard library https://github.com/stretchr/testify
 
 * mockery: A mock code autogenerator for Golang and it uses the testify mock package. https://github.com/vektra/mockery
+
+* GoMock: Another mocking framework for Go. https://github.com/golang/mock

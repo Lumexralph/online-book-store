@@ -9,6 +9,11 @@ import "google/protobuf/timestamp.proto";
 /* set where the generate Go code will be placed */
 option go_package = "internal/grpc/domain";
 
+// ProductService definition to handle our products.
+service ProductService {
+  rpc AddProduct (AddProductRequest) returns (AddProductResponse);
+}
+
 message Product {
   // @inject_tag: gorm:"primary_key"
   uint64 id = 1;
@@ -39,7 +44,3 @@ message AddProductResponse {
   Product created_product = 1;
 }
 
-// ProductService definition to handle our products.
-service ProductService {
-  rpc AddProduct (AddProductRequest) returns (AddProductResponse);
-}
