@@ -1,5 +1,5 @@
 /**
- * @fileoverview gRPC-Web generated client stub for product.internal.proto_files.service
+ * @fileoverview gRPC-Web generated client stub for product.internal.proto_files.domain
  * @enhanceable
  * @public
  */
@@ -16,12 +16,12 @@ const grpc = {};
 grpc.web = require('grpc-web');
 
 
-var internal_proto_files_domain_product_pb = require('../../../internal/proto_files/domain/product_pb.js')
+var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js')
 const proto = {};
 proto.product = {};
 proto.product.internal = {};
 proto.product.internal.proto_files = {};
-proto.product.internal.proto_files.service = require('./product_service_pb.js');
+proto.product.internal.proto_files.domain = require('./product_pb.js');
 
 /**
  * @param {string} hostname
@@ -31,7 +31,7 @@ proto.product.internal.proto_files.service = require('./product_service_pb.js');
  * @struct
  * @final
  */
-proto.product.internal.proto_files.service.ProductServiceClient =
+proto.product.internal.proto_files.domain.ProductServiceClient =
     function(hostname, credentials, options) {
   if (!options) options = {};
   options['format'] = 'text';
@@ -57,7 +57,7 @@ proto.product.internal.proto_files.service.ProductServiceClient =
  * @struct
  * @final
  */
-proto.product.internal.proto_files.service.ProductServicePromiseClient =
+proto.product.internal.proto_files.domain.ProductServicePromiseClient =
     function(hostname, credentials, options) {
   if (!options) options = {};
   options['format'] = 'text';
@@ -78,58 +78,58 @@ proto.product.internal.proto_files.service.ProductServicePromiseClient =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.product.internal.proto_files.service.AddProductRequest,
- *   !proto.product.internal.proto_files.service.AddProductResponse>}
+ *   !proto.product.internal.proto_files.domain.AddProductRequest,
+ *   !proto.product.internal.proto_files.domain.AddProductResponse>}
  */
 const methodDescriptor_ProductService_AddProduct = new grpc.web.MethodDescriptor(
-  '/product.internal.proto_files.service.ProductService/AddProduct',
+  '/product.internal.proto_files.domain.ProductService/AddProduct',
   grpc.web.MethodType.UNARY,
-  proto.product.internal.proto_files.service.AddProductRequest,
-  proto.product.internal.proto_files.service.AddProductResponse,
+  proto.product.internal.proto_files.domain.AddProductRequest,
+  proto.product.internal.proto_files.domain.AddProductResponse,
   /**
-   * @param {!proto.product.internal.proto_files.service.AddProductRequest} request
+   * @param {!proto.product.internal.proto_files.domain.AddProductRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.product.internal.proto_files.service.AddProductResponse.deserializeBinary
+  proto.product.internal.proto_files.domain.AddProductResponse.deserializeBinary
 );
 
 
 /**
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
- *   !proto.product.internal.proto_files.service.AddProductRequest,
- *   !proto.product.internal.proto_files.service.AddProductResponse>}
+ *   !proto.product.internal.proto_files.domain.AddProductRequest,
+ *   !proto.product.internal.proto_files.domain.AddProductResponse>}
  */
 const methodInfo_ProductService_AddProduct = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.product.internal.proto_files.service.AddProductResponse,
+  proto.product.internal.proto_files.domain.AddProductResponse,
   /**
-   * @param {!proto.product.internal.proto_files.service.AddProductRequest} request
+   * @param {!proto.product.internal.proto_files.domain.AddProductRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.product.internal.proto_files.service.AddProductResponse.deserializeBinary
+  proto.product.internal.proto_files.domain.AddProductResponse.deserializeBinary
 );
 
 
 /**
- * @param {!proto.product.internal.proto_files.service.AddProductRequest} request The
+ * @param {!proto.product.internal.proto_files.domain.AddProductRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.Error, ?proto.product.internal.proto_files.service.AddProductResponse)}
+ * @param {function(?grpc.web.Error, ?proto.product.internal.proto_files.domain.AddProductResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.product.internal.proto_files.service.AddProductResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.product.internal.proto_files.domain.AddProductResponse>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.product.internal.proto_files.service.ProductServiceClient.prototype.addProduct =
+proto.product.internal.proto_files.domain.ProductServiceClient.prototype.addProduct =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/product.internal.proto_files.service.ProductService/AddProduct',
+      '/product.internal.proto_files.domain.ProductService/AddProduct',
       request,
       metadata || {},
       methodDescriptor_ProductService_AddProduct,
@@ -138,22 +138,22 @@ proto.product.internal.proto_files.service.ProductServiceClient.prototype.addPro
 
 
 /**
- * @param {!proto.product.internal.proto_files.service.AddProductRequest} request The
+ * @param {!proto.product.internal.proto_files.domain.AddProductRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.product.internal.proto_files.service.AddProductResponse>}
+ * @return {!Promise<!proto.product.internal.proto_files.domain.AddProductResponse>}
  *     A native promise that resolves to the response
  */
-proto.product.internal.proto_files.service.ProductServicePromiseClient.prototype.addProduct =
+proto.product.internal.proto_files.domain.ProductServicePromiseClient.prototype.addProduct =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/product.internal.proto_files.service.ProductService/AddProduct',
+      '/product.internal.proto_files.domain.ProductService/AddProduct',
       request,
       metadata || {},
       methodDescriptor_ProductService_AddProduct);
 };
 
 
-module.exports = proto.product.internal.proto_files.service;
+module.exports = proto.product.internal.proto_files.domain;
 
