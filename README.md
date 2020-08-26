@@ -18,10 +18,13 @@ I'll try to document what I learn in the process.
 ## The project will be built with tools like:
 
 - gRPC
+- Protobuf
+- grpc-web
 - Docker
 - Kubernetes
 - MongoDB
 - PostgresQL
+- Gorm
 - More tools will be added as development continues 😄
 
 ## Contributions

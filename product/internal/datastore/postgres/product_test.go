@@ -7,6 +7,8 @@ import (
 	"testing"
 
 	"github.com/golang/protobuf/ptypes"
+	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/stretchr/testify/assert"
@@ -33,6 +35,7 @@ func TestProductStore_CreateProduct(t *testing.T) {
 			Name:        "Sherlock Holmes",
 			Description: "It is an investigative book",
 			Price:       123.56,
+			Quantity:    20,
 			Slug:        "sherlock-holmes",
 			CreatedAt:   &domain.Timestamp{Timestamp: ptypes.TimestampNow()},
 		},
@@ -52,25 +55,24 @@ func TestProductStore_CreateProduct(t *testing.T) {
 				Name:        "Sherlock Holmes",
 				Description: "It is an investigative book",
 				Price:       123.56,
+				Quantity:    20,
 				Slug:        "sherlock-holmes",
 				CreatedAt:   &domain.Timestamp{Timestamp: ptypes.TimestampNow()},
 				UpdatedAt:   &domain.Timestamp{Timestamp: ptypes.TimestampNow()},
 			},
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewProductStore(tt.fields.DB)
 			got, err := s.CreateProduct(tt.args.product)
-			t.Log("got", got)
+
 			assert.Nilf(t, err, "ProductStore.CreateProduct() error = %v", err)
 
-			assert.Equalf(t, got.Id, tt.want.Id, "ProductStore.CreateProduct() got=%d; want=%d", got.Id, tt.want.Id)
-			assert.Equalf(t, got.Name, tt.want.Name, "ProductStore.CreateProduct() got=%d; want=%d", got.Name, tt.want.Name)
-			assert.Equalf(t, got.Description, tt.want.Description, "ProductStore.CreateProduct() got=%d; want=%d", got.Description, tt.want.Description)
-			assert.Equalf(t, got.Price, tt.want.Price, "ProductStore.CreateProduct() got=%d; want=%d", got.Price, tt.want.Price)
-			assert.Equalf(t, got.Slug, tt.want.Slug, "ProductStore.CreateProduct() got=%d; want=%d", got.Slug, tt.want.Slug)
-			assert.Equalf(t, got.CreatedAt, tt.want.CreatedAt, "ProductStore.CreateProduct() got=%d; want=%d", got.CreatedAt, tt.want.CreatedAt)
+			if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(domain.Timestamp{})); diff != "" {
+				t.Errorf("ProductStore.CreateProduct() mismatch (-want +got):\n%s", diff)
+			}
 		})
 	}
 
@@ -79,5 +81,4 @@ func TestProductStore_CreateProduct(t *testing.T) {
 	require.Nilf(t, err, "teardown: could not drop table: %v", err)
 	err = teardown()
 	require.Nilf(t, err, "teardown: error closing the database: %v", err)
-
 }

@@ -25,20 +25,21 @@ func main() {
 
 	client := domain.NewProductServiceClient(conn)
 
-	product := &domain.AddProductRequest{
+	req := &domain.AddProductRequest{
 		Product: &domain.Product{
 			Id:          1,
 			Name:        "Sherlock Holmes",
 			Description: "It is an investigative book",
 			Price:       123.56,
 			Slug:        "sherlock-holmes",
+			Quantity:    60,
 			CreatedAt:   &domain.Timestamp{Timestamp: ptypes.TimestampNow()},
 		},
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	//	try creating a product
-	resp, err := client.AddProduct(ctx, product)
+	resp, err := client.AddProduct(ctx, req)
 	if err != nil {
 		log.Fatalln(err)
 	}

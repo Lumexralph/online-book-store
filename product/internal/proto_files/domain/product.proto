@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-// TODO: add protobuf linter and dependency manager
+// TODO: add protobuf linter and dependency manager, change the Product message field
 // ref: https://medium.com/stackpulse/grpc-in-practice-directory-structure-linting-and-more-d4d438ac4f86
 package product.internal.proto_files.domain;
 
@@ -8,6 +8,11 @@ import "google/protobuf/timestamp.proto";
 
 /* set where the generate Go code will be placed */
 option go_package = "internal/grpc/domain";
+
+// ProductService definition to handle our products.
+service ProductService {
+  rpc AddProduct (AddProductRequest) returns (AddProductResponse);
+}
 
 message Product {
   // @inject_tag: gorm:"primary_key"
@@ -29,3 +34,13 @@ message Product {
 message Timestamp {
   google.protobuf.Timestamp timestamp = 1;
 }
+
+// AddClient Request and Response
+message AddProductRequest {
+  Product product = 1;
+}
+
+message AddProductResponse {
+  Product created_product = 1;
+}
+
