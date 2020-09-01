@@ -2,12 +2,14 @@ syntax = "proto3";
 
 // TODO: add protobuf linter and dependency manager, change the Product message field
 // ref: https://medium.com/stackpulse/grpc-in-practice-directory-structure-linting-and-more-d4d438ac4f86
-package product.internal.proto_files.domain;
+package bookstore;
 
 import "google/protobuf/timestamp.proto";
 
 /* set where the generate Go code will be placed */
-option go_package = "internal/grpc/domain";
+option go_package = "domain";
+
+// ---------------Product Catalog---------------------------------------------------
 
 // ProductService definition to handle our products.
 service ProductService {
@@ -15,27 +17,33 @@ service ProductService {
 }
 
 message Product {
-  // @inject_tag: gorm:"primary_key"
+  // @inject_tag: gorm:"primaryKey"
   uint64 id = 1;
-  string name = 2;
-  string description = 3;
-  double price = 4;
-  string slug = 5;
-  bool inactive = 6;
-  uint64 quantity = 7;
+  // @inject_tag: gorm:"unique;not null"
+  string uuid = 2;
+  string name = 3;
+  string description = 4;
+  double price = 5;
+  string slug = 6;
+  bool inactive = 7;
+  uint64 quantity = 8;
+  string image_url = 9;
+
+  // We need to have an array of categories that can be used to search a product
+  repeated string categories = 10;
+
   // @inject_tag: gorm:"type:timestamp"
-  Timestamp created_at = 8;
+  Timestamp created_at = 11;
   // @inject_tag: gorm:"type:timestamp"
-  Timestamp updated_at = 9;
+  Timestamp updated_at = 12;
   // @inject_tag: gorm:"type:timestamp"
-  Timestamp deleted_at = 10;
+  Timestamp deleted_at = 13;
 }
 
 message Timestamp {
   google.protobuf.Timestamp timestamp = 1;
 }
 
-// AddClient Request and Response
 message AddProductRequest {
   Product product = 1;
 }
