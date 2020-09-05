@@ -30,7 +30,8 @@ message Product {
   string image_url = 9;
 
   // We need to have an array of categories that can be used to search a product
-  repeated string categories = 10;
+  // @inject_tag: `gorm:"many2many:product_categories;"`
+  repeated Category categories = 10;
 
   // @inject_tag: gorm:"type:timestamp"
   Timestamp created_at = 11;
@@ -38,6 +39,12 @@ message Product {
   Timestamp updated_at = 12;
   // @inject_tag: gorm:"type:timestamp"
   Timestamp deleted_at = 13;
+}
+
+message Category {
+  // @inject_tag: gorm:"primaryKey"
+  uint64 id = 1;
+  string name = 2;
 }
 
 message Timestamp {

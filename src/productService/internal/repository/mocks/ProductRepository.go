@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	domain "product/internal/grpc/domain"
+	domain "productservice/internal/domain"
 
 	mock "github.com/stretchr/testify/mock"
 )

@@ -3,8 +3,9 @@
 package postgres
 
 import (
-	"product/internal/grpc/domain"
 	"testing"
+
+	"productservice/internal/domain"
 
 	"github.com/golang/protobuf/ptypes"
 	"github.com/google/go-cmp/cmp"

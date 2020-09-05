@@ -8,7 +8,7 @@ import (
 	context "context"
 	gomock "github.com/golang/mock/gomock"
 	grpc "google.golang.org/grpc"
-	domain "product/internal/grpc/domain"
+	domain "productservice/internal/domain"
 	reflect "reflect"
 )
 

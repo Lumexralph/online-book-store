@@ -31,7 +31,7 @@ func (ts *Timestamp) Scan(value interface{}) error {
 			return err
 		}
 	default:
-		return fmt.Errorf("Not a protobuf Timestamp")
+		return fmt.Errorf("not a protobuf Timestamp")
 	}
 	return nil
 }

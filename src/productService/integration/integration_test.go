@@ -10,7 +10,7 @@ import (
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/stretchr/testify/require"
 
-	"product/internal/grpc/domain"
+	"productservice/internal/domain"
 )
 
 func TestProductService(t *testing.T) {

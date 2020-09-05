@@ -6,7 +6,7 @@ package migrations
 import (
 	"log"
 
-	"product/internal/grpc/domain"
+	"productservice/internal/domain"
 
 	"github.com/jinzhu/gorm"
 	//  need it for the side effects of gorm for postgres
@@ -15,10 +15,10 @@ import (
 
 // Migrate will create a new database tables with the generated protobuf entities.
 func Migrate(db *gorm.DB) error {
-	err := db.AutoMigrate(&domain.Product{}).Error
+	err := db.AutoMigrate(&domain.Product{}, &domain.Category{}).Error
 	if err != nil {
 		return err
 	}
-	log.Println("postres: migration done!")
+	log.Println("postgres: migration done!")
 	return nil
 }

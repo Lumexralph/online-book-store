@@ -8,9 +8,9 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/test/bufconn"
 
-	"product/internal/grpc/domain"
-	"product/internal/grpc/services"
-	repo "product/internal/repository"
+	"productservice/internal/domain"
+	repo "productservice/internal/repository"
+	"productservice/internal/services"
 )
 
 // fakeProductStore is temporary storage products

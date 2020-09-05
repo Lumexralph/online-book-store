@@ -5,7 +5,7 @@ package postgres
 import (
 	"errors"
 	"fmt"
-	"product/internal/grpc/domain"
+	"productservice/internal/domain"
 
 	"github.com/jinzhu/gorm"
 	//  need it for the side effects of gorm for postgres

@@ -3,8 +3,8 @@ package services
 
 import (
 	"context"
-	"product/internal/grpc/domain"
-	repo "product/internal/repository"
+	"productservice/internal/domain"
+	repo "productservice/internal/repository"
 )
 
 // ProductService is an implementation of ProductServiceServer gRPC service.

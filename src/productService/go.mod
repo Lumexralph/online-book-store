@@ -1,4 +1,4 @@
-module product
+module productservice
 
 go 1.13
 

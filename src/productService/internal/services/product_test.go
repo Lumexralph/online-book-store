@@ -3,9 +3,9 @@ package services
 
 import (
 	"context"
-	"product/internal/grpc/domain"
-	repo "product/internal/repository"
-	repomock "product/internal/repository/mocks"
+	"productservice/internal/domain"
+	repo "productservice/internal/repository"
+	repomock "productservice/internal/repository/mocks"
 	"testing"
 	"time"
 

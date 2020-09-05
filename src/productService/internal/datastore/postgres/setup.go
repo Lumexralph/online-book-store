@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"product/internal/datastore/migrations"
+	"productservice/internal/datastore/migrations"
 
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"

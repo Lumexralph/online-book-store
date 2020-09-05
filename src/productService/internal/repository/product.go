@@ -5,7 +5,7 @@
 package repository
 
 import (
-	"product/internal/grpc/domain"
+	"productservice/internal/domain"
 )
 
 // ProductRepository interface that any database/datastore component implementation have to provide.

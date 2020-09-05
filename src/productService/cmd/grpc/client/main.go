@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"product/internal/grpc/domain"
+	"productservice/internal/domain"
 
 	"github.com/golang/protobuf/ptypes"
 
