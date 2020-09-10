@@ -14,8 +14,6 @@ const time = new Timestamp();
 time.setTimestamp(currentTimestamp);
 
 const newProduct = new Product();
-newProduct.setId(2);
-newProduct.setUuid("12ht6-78");
 newProduct.setName("Sherlock Holmes Jnr");
 newProduct.setDescription("It is an investigative book: sequel");
 newProduct.setPrice(153.56);

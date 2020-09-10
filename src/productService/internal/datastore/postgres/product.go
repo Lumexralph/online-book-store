@@ -25,6 +25,7 @@ func NewProductStore(db *gorm.DB) *ProductStore {
 // CreateProduct will take the data from the stored file
 // and persist it to the database.
 func (s ProductStore) CreateProduct(product *domain.Product) (*domain.Product, error) {
+	// generate the slug which is product-name-uuid
 	db := s.DB.Create(product)
 	if db.Error != nil {
 		return nil, fmt.Errorf("error creating product: %v", db.Error)

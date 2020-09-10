@@ -15,17 +15,19 @@ I'll try to document what I learn in the process.
 - Create the web app with React and Typescript
 - Whatever idea pops up in my head
 
-## The project will be built with tools like:
+## The project is currently built with the following tools:
 
+- Go
+- TypeScript
+- React
 - gRPC
-- Protobuf
+- Protocol buffer v3
 - grpc-web
 - Docker
-- Kubernetes
-- MongoDB
+- Envoy
 - PostgresQL
 - Gorm
-- More tools will be added as development continues 😄
+- 😄
 
 ## Contributions
 

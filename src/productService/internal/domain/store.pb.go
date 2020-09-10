@@ -29,10 +29,10 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 type Product struct {
-	// @inject_tag: gorm:"primaryKey"
-	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" gorm:"primaryKey"`
-	// @inject_tag: gorm:"unique;not null"
-	Uuid        string  `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty" gorm:"unique;not null"`
+	// @inject_tag: gorm:"primaryKey;autoIncrement"
+	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" gorm:"primaryKey;autoIncrement"`
+	// @inject_tag: gorm:"type:uuid;unique;default:uuid_generate_v4();not null"
+	Uuid        string  `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty" gorm:"type:uuid;unique;default:uuid_generate_v4();not null"`
 	Name        string  `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	Description string  `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
 	Price       float64 `protobuf:"fixed64,5,opt,name=price,proto3" json:"price,omitempty"`

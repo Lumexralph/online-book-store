@@ -17,9 +17,9 @@ service ProductService {
 }
 
 message Product {
-  // @inject_tag: gorm:"primaryKey"
+  // @inject_tag: gorm:"primaryKey;autoIncrement"
   uint64 id = 1;
-  // @inject_tag: gorm:"unique;not null"
+  // @inject_tag: gorm:"type:uuid;unique;default:uuid_generate_v4();not null"
   string uuid = 2;
   string name = 3;
   string description = 4;
