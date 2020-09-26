@@ -30,25 +30,27 @@ const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 type Product struct {
 	// @inject_tag: gorm:"primaryKey;autoIncrement"
-	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" gorm:"primaryKey;autoIncrement"`
+	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// @inject_tag: gorm:"type:uuid;unique;default:uuid_generate_v4();not null"
-	Uuid        string  `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty" gorm:"type:uuid;unique;default:uuid_generate_v4();not null"`
+	Uuid        string  `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`
 	Name        string  `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	Description string  `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
 	Price       float64 `protobuf:"fixed64,5,opt,name=price,proto3" json:"price,omitempty"`
 	Slug        string  `protobuf:"bytes,6,opt,name=slug,proto3" json:"slug,omitempty"`
 	Inactive    bool    `protobuf:"varint,7,opt,name=inactive,proto3" json:"inactive,omitempty"`
 	Quantity    uint64  `protobuf:"varint,8,opt,name=quantity,proto3" json:"quantity,omitempty"`
-	ImageUrl    string  `protobuf:"bytes,9,opt,name=image_url,json=imageUrl,proto3" json:"image_url,omitempty"`
+	// Product will have a one-to-one relationship with product image
+	// @inject_tag: `gorm:"foreignKey;"`
+	ImageId *ProductImage `protobuf:"bytes,9,opt,name=image_id,json=imageId,proto3" json:"image_id,omitempty"`
 	// We need to have an array of categories that can be used to search a product
 	// @inject_tag: `gorm:"many2many:product_categories;"`
-	Categories []*Category `protobuf:"bytes,10,rep,name=categories,proto3" json:"categories,omitempty" gorm:"many2many:product_categories;"`
+	Categories []*Category `protobuf:"bytes,10,rep,name=categories,proto3" json:"categories,omitempty"`
 	// @inject_tag: gorm:"type:timestamp"
-	CreatedAt *Timestamp `protobuf:"bytes,11,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty" gorm:"type:timestamp"`
+	CreatedAt *Timestamp `protobuf:"bytes,11,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	// @inject_tag: gorm:"type:timestamp"
-	UpdatedAt *Timestamp `protobuf:"bytes,12,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty" gorm:"type:timestamp"`
+	UpdatedAt *Timestamp `protobuf:"bytes,12,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	// @inject_tag: gorm:"type:timestamp"
-	DeletedAt            *Timestamp `protobuf:"bytes,13,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty" gorm:"type:timestamp"`
+	DeletedAt            *Timestamp `protobuf:"bytes,13,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
 	XXX_unrecognized     []byte     `json:"-"`
 	XXX_sizecache        int32      `json:"-"`
@@ -135,11 +137,11 @@ func (m *Product) GetQuantity() uint64 {
 	return 0
 }
 
-func (m *Product) GetImageUrl() string {
+func (m *Product) GetImageId() *ProductImage {
 	if m != nil {
-		return m.ImageUrl
+		return m.ImageId
 	}
-	return ""
+	return nil
 }
 
 func (m *Product) GetCategories() []*Category {
@@ -171,8 +173,8 @@ func (m *Product) GetDeletedAt() *Timestamp {
 }
 
 type Category struct {
-	// @inject_tag: gorm:"primaryKey"
-	Id                   uint64   `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" gorm:"primaryKey"`
+	// @inject_tag: gorm:"primaryKey;autoIncrement"
+	Id                   uint64   `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name                 string   `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -335,46 +337,279 @@ func (m *AddProductResponse) GetCreatedProduct() *Product {
 	return nil
 }
 
+type ProductImage struct {
+	// @inject_tag: gorm:"primaryKey;autoIncrement"
+	Id                   uint64   `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	ImageUrl             string   `protobuf:"bytes,2,opt,name=image_url,json=imageUrl,proto3" json:"image_url,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ProductImage) Reset()         { *m = ProductImage{} }
+func (m *ProductImage) String() string { return proto.CompactTextString(m) }
+func (*ProductImage) ProtoMessage()    {}
+func (*ProductImage) Descriptor() ([]byte, []int) {
+	return fileDescriptor_98bbca36ef968dfc, []int{5}
+}
+
+func (m *ProductImage) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ProductImage.Unmarshal(m, b)
+}
+func (m *ProductImage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ProductImage.Marshal(b, m, deterministic)
+}
+func (m *ProductImage) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ProductImage.Merge(m, src)
+}
+func (m *ProductImage) XXX_Size() int {
+	return xxx_messageInfo_ProductImage.Size(m)
+}
+func (m *ProductImage) XXX_DiscardUnknown() {
+	xxx_messageInfo_ProductImage.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ProductImage proto.InternalMessageInfo
+
+func (m *ProductImage) GetId() uint64 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *ProductImage) GetImageUrl() string {
+	if m != nil {
+		return m.ImageUrl
+	}
+	return ""
+}
+
+//
+//The idea is to divide the image file into multiple chunks, and send them
+//one by one to the server in each request message. We use a oneof field
+//here because the first request will only contain the metadata i .e the product id
+//the image belongs to and the image data. Then the following requests will contain
+//the image data chunks.
+type UploadImageRequest struct {
+	// Types that are valid to be assigned to Data:
+	//	*UploadImageRequest_Info
+	//	*UploadImageRequest_ImageChunk
+	Data                 isUploadImageRequest_Data `protobuf_oneof:"data"`
+	XXX_NoUnkeyedLiteral struct{}                  `json:"-"`
+	XXX_unrecognized     []byte                    `json:"-"`
+	XXX_sizecache        int32                     `json:"-"`
+}
+
+func (m *UploadImageRequest) Reset()         { *m = UploadImageRequest{} }
+func (m *UploadImageRequest) String() string { return proto.CompactTextString(m) }
+func (*UploadImageRequest) ProtoMessage()    {}
+func (*UploadImageRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_98bbca36ef968dfc, []int{6}
+}
+
+func (m *UploadImageRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UploadImageRequest.Unmarshal(m, b)
+}
+func (m *UploadImageRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UploadImageRequest.Marshal(b, m, deterministic)
+}
+func (m *UploadImageRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UploadImageRequest.Merge(m, src)
+}
+func (m *UploadImageRequest) XXX_Size() int {
+	return xxx_messageInfo_UploadImageRequest.Size(m)
+}
+func (m *UploadImageRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_UploadImageRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UploadImageRequest proto.InternalMessageInfo
+
+type isUploadImageRequest_Data interface {
+	isUploadImageRequest_Data()
+}
+
+type UploadImageRequest_Info struct {
+	Info *ImageInfo `protobuf:"bytes,1,opt,name=info,proto3,oneof"`
+}
+
+type UploadImageRequest_ImageChunk struct {
+	ImageChunk []byte `protobuf:"bytes,2,opt,name=image_chunk,json=imageChunk,proto3,oneof"`
+}
+
+func (*UploadImageRequest_Info) isUploadImageRequest_Data() {}
+
+func (*UploadImageRequest_ImageChunk) isUploadImageRequest_Data() {}
+
+func (m *UploadImageRequest) GetData() isUploadImageRequest_Data {
+	if m != nil {
+		return m.Data
+	}
+	return nil
+}
+
+func (m *UploadImageRequest) GetInfo() *ImageInfo {
+	if x, ok := m.GetData().(*UploadImageRequest_Info); ok {
+		return x.Info
+	}
+	return nil
+}
+
+func (m *UploadImageRequest) GetImageChunk() []byte {
+	if x, ok := m.GetData().(*UploadImageRequest_ImageChunk); ok {
+		return x.ImageChunk
+	}
+	return nil
+}
+
+// XXX_OneofWrappers is for the internal use of the proto package.
+func (*UploadImageRequest) XXX_OneofWrappers() []interface{} {
+	return []interface{}{
+		(*UploadImageRequest_Info)(nil),
+		(*UploadImageRequest_ImageChunk)(nil),
+	}
+}
+
+type ImageInfo struct {
+	ProductId            uint64   `protobuf:"varint,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
+	ImageFormat          string   `protobuf:"bytes,2,opt,name=image_format,json=imageFormat,proto3" json:"image_format,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ImageInfo) Reset()         { *m = ImageInfo{} }
+func (m *ImageInfo) String() string { return proto.CompactTextString(m) }
+func (*ImageInfo) ProtoMessage()    {}
+func (*ImageInfo) Descriptor() ([]byte, []int) {
+	return fileDescriptor_98bbca36ef968dfc, []int{7}
+}
+
+func (m *ImageInfo) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ImageInfo.Unmarshal(m, b)
+}
+func (m *ImageInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ImageInfo.Marshal(b, m, deterministic)
+}
+func (m *ImageInfo) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ImageInfo.Merge(m, src)
+}
+func (m *ImageInfo) XXX_Size() int {
+	return xxx_messageInfo_ImageInfo.Size(m)
+}
+func (m *ImageInfo) XXX_DiscardUnknown() {
+	xxx_messageInfo_ImageInfo.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ImageInfo proto.InternalMessageInfo
+
+func (m *ImageInfo) GetProductId() uint64 {
+	if m != nil {
+		return m.ProductId
+	}
+	return 0
+}
+
+func (m *ImageInfo) GetImageFormat() string {
+	if m != nil {
+		return m.ImageFormat
+	}
+	return ""
+}
+
+type UploadImageResponse struct {
+	ImageUrl             string   `protobuf:"bytes,1,opt,name=image_url,json=imageUrl,proto3" json:"image_url,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UploadImageResponse) Reset()         { *m = UploadImageResponse{} }
+func (m *UploadImageResponse) String() string { return proto.CompactTextString(m) }
+func (*UploadImageResponse) ProtoMessage()    {}
+func (*UploadImageResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_98bbca36ef968dfc, []int{8}
+}
+
+func (m *UploadImageResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UploadImageResponse.Unmarshal(m, b)
+}
+func (m *UploadImageResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UploadImageResponse.Marshal(b, m, deterministic)
+}
+func (m *UploadImageResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UploadImageResponse.Merge(m, src)
+}
+func (m *UploadImageResponse) XXX_Size() int {
+	return xxx_messageInfo_UploadImageResponse.Size(m)
+}
+func (m *UploadImageResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_UploadImageResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UploadImageResponse proto.InternalMessageInfo
+
+func (m *UploadImageResponse) GetImageUrl() string {
+	if m != nil {
+		return m.ImageUrl
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*Product)(nil), "bookstore.Product")
 	proto.RegisterType((*Category)(nil), "bookstore.Category")
 	proto.RegisterType((*Timestamp)(nil), "bookstore.Timestamp")
 	proto.RegisterType((*AddProductRequest)(nil), "bookstore.AddProductRequest")
 	proto.RegisterType((*AddProductResponse)(nil), "bookstore.AddProductResponse")
+	proto.RegisterType((*ProductImage)(nil), "bookstore.ProductImage")
+	proto.RegisterType((*UploadImageRequest)(nil), "bookstore.UploadImageRequest")
+	proto.RegisterType((*ImageInfo)(nil), "bookstore.ImageInfo")
+	proto.RegisterType((*UploadImageResponse)(nil), "bookstore.UploadImageResponse")
 }
 
 func init() { proto.RegisterFile("store.proto", fileDescriptor_98bbca36ef968dfc) }
 
 var fileDescriptor_98bbca36ef968dfc = []byte{
-	// 433 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x52, 0xc1, 0x6e, 0xd4, 0x30,
-	0x10, 0x55, 0x76, 0xb7, 0xbb, 0xc9, 0x04, 0x16, 0x61, 0x7a, 0xb0, 0x16, 0x10, 0x51, 0x4e, 0x39,
-	0xa0, 0x54, 0xda, 0x5e, 0x90, 0x38, 0x05, 0xc4, 0x81, 0x1b, 0x04, 0xb8, 0xc0, 0xa1, 0xf2, 0xc6,
-	0x43, 0x64, 0x91, 0xc4, 0xa9, 0x63, 0x57, 0xea, 0x8f, 0xf1, 0x7d, 0x28, 0xb6, 0x93, 0x46, 0x02,
-	0xda, 0xdb, 0xcc, 0x9b, 0xf7, 0x9e, 0x47, 0xe3, 0x07, 0xf1, 0xa0, 0xa5, 0xc2, 0xbc, 0x57, 0x52,
-	0x4b, 0x12, 0x9d, 0xa4, 0xfc, 0x65, 0x81, 0xc3, 0xab, 0x5a, 0xca, 0xba, 0xc1, 0x0b, 0x3b, 0x38,
-	0x99, 0x9f, 0x17, 0x5a, 0xb4, 0x38, 0x68, 0xd6, 0xf6, 0x8e, 0x9b, 0xfe, 0x5e, 0xc3, 0xee, 0x93,
-	0x92, 0xdc, 0x54, 0x9a, 0xec, 0x61, 0x25, 0x38, 0x0d, 0x92, 0x20, 0xdb, 0x94, 0x2b, 0xc1, 0x09,
-	0x81, 0x8d, 0x31, 0x82, 0xd3, 0x55, 0x12, 0x64, 0x51, 0x69, 0xeb, 0x11, 0xeb, 0x58, 0x8b, 0x74,
-	0xed, 0xb0, 0xb1, 0x26, 0x09, 0xc4, 0x1c, 0x87, 0x4a, 0x89, 0x5e, 0x0b, 0xd9, 0xd1, 0x8d, 0x1d,
-	0x2d, 0x21, 0x72, 0x0e, 0x67, 0xbd, 0x12, 0x15, 0xd2, 0xb3, 0x24, 0xc8, 0x82, 0xd2, 0x35, 0xa3,
-	0xd7, 0xd0, 0x98, 0x9a, 0x6e, 0x9d, 0xd7, 0x58, 0x93, 0x03, 0x84, 0xa2, 0x63, 0x95, 0x16, 0x37,
-	0x48, 0x77, 0x49, 0x90, 0x85, 0xe5, 0xdc, 0x8f, 0xb3, 0x6b, 0xc3, 0x3a, 0x2d, 0xf4, 0x2d, 0x0d,
-	0xed, 0x96, 0x73, 0x4f, 0x9e, 0x43, 0x24, 0x5a, 0x56, 0xe3, 0x95, 0x51, 0x0d, 0x8d, 0xac, 0x61,
-	0x68, 0x81, 0x6f, 0xaa, 0x21, 0x97, 0x00, 0x15, 0xd3, 0x58, 0x4b, 0x25, 0x70, 0xa0, 0x90, 0xac,
-	0xb3, 0xf8, 0xf8, 0x2c, 0x9f, 0xaf, 0x94, 0xbf, 0x77, 0xc3, 0xdb, 0x72, 0x41, 0xb3, 0x22, 0x85,
-	0x4c, 0x23, 0xbf, 0x62, 0x9a, 0xc6, 0x49, 0x90, 0xc5, 0xc7, 0xf3, 0x85, 0xe8, 0xeb, 0x74, 0xc9,
-	0x32, 0xf2, 0xbc, 0x42, 0x8f, 0x22, 0xd3, 0xf3, 0x49, 0xf4, 0xe8, 0x3e, 0x91, 0xe7, 0x39, 0x11,
-	0xc7, 0x06, 0xbd, 0xe8, 0xf1, 0x7d, 0x22, 0xcf, 0x2b, 0x74, 0x9a, 0x43, 0x38, 0xad, 0xfd, 0xaf,
-	0x8f, 0xb3, 0x9f, 0xb4, 0xba, 0xfb, 0xa4, 0xf4, 0x03, 0x44, 0xb3, 0x0f, 0x79, 0x03, 0xd1, 0x1c,
-	0x04, 0xab, 0x8b, 0x8f, 0x87, 0xdc, 0x45, 0x25, 0x9f, 0xa2, 0xb2, 0x7c, 0x76, 0x26, 0xa7, 0x05,
-	0x3c, 0x2d, 0x38, 0xf7, 0x89, 0x29, 0xf1, 0xda, 0xe0, 0xa0, 0xc9, 0x6b, 0xd8, 0xf5, 0x0e, 0xf1,
-	0x66, 0x64, 0xb1, 0xfd, 0xc4, 0x9d, 0x28, 0xe9, 0x67, 0x20, 0x4b, 0x8b, 0xa1, 0x97, 0xdd, 0x80,
-	0xe4, 0x2d, 0x3c, 0x99, 0xce, 0xfd, 0xb0, 0xd7, 0xde, 0x53, 0x7d, 0x7f, 0xfc, 0x01, 0x7b, 0x5f,
-	0x7e, 0x41, 0x75, 0x33, 0x66, 0xeb, 0x23, 0xc0, 0xdd, 0x23, 0xe4, 0xc5, 0xc2, 0xe3, 0xaf, 0xf5,
-	0x0f, 0x2f, 0xff, 0x33, 0x75, 0x9b, 0xbd, 0x0b, 0xbf, 0x6f, 0xb9, 0x6c, 0x99, 0xe8, 0x4e, 0x5b,
-	0x7b, 0x9b, 0xcb, 0x3f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x61, 0xd3, 0x00, 0x96, 0x6e, 0x03, 0x00,
-	0x00,
+	// 589 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x53, 0xcf, 0x6f, 0xd3, 0x30,
+	0x14, 0x5e, 0xba, 0xae, 0x4d, 0x5e, 0xca, 0x10, 0xde, 0x24, 0xa2, 0xc2, 0x20, 0xcb, 0x29, 0x42,
+	0x28, 0x93, 0xb2, 0x0b, 0xd2, 0x4e, 0xdd, 0x04, 0x5a, 0x0f, 0x20, 0x08, 0xec, 0x02, 0x87, 0xca,
+	0x8d, 0xdd, 0x62, 0x35, 0x89, 0xb3, 0xc4, 0x99, 0xb4, 0x3f, 0x92, 0xff, 0x09, 0xc5, 0x76, 0x32,
+	0x57, 0x65, 0xe3, 0x16, 0xbf, 0xf7, 0x7d, 0xef, 0xc7, 0xf7, 0xbd, 0x80, 0x5b, 0x0b, 0x5e, 0xd1,
+	0xa8, 0xac, 0xb8, 0xe0, 0xc8, 0x59, 0x72, 0xbe, 0x91, 0x81, 0xe9, 0xdb, 0x35, 0xe7, 0xeb, 0x8c,
+	0x9e, 0xc9, 0xc4, 0xb2, 0x59, 0x9d, 0x09, 0x96, 0xd3, 0x5a, 0xe0, 0xbc, 0x54, 0xd8, 0xe0, 0xcf,
+	0x3e, 0x8c, 0xbf, 0x56, 0x9c, 0x34, 0xa9, 0x40, 0x87, 0x30, 0x60, 0xc4, 0xb3, 0x7c, 0x2b, 0x1c,
+	0x26, 0x03, 0x46, 0x10, 0x82, 0x61, 0xd3, 0x30, 0xe2, 0x0d, 0x7c, 0x2b, 0x74, 0x12, 0xf9, 0xdd,
+	0xc6, 0x0a, 0x9c, 0x53, 0x6f, 0x5f, 0xc5, 0xda, 0x6f, 0xe4, 0x83, 0x4b, 0x68, 0x9d, 0x56, 0xac,
+	0x14, 0x8c, 0x17, 0xde, 0x50, 0xa6, 0xcc, 0x10, 0x3a, 0x86, 0x83, 0xb2, 0x62, 0x29, 0xf5, 0x0e,
+	0x7c, 0x2b, 0xb4, 0x12, 0xf5, 0x68, 0x6b, 0xd5, 0x59, 0xb3, 0xf6, 0x46, 0xaa, 0x56, 0xfb, 0x8d,
+	0xa6, 0x60, 0xb3, 0x02, 0xa7, 0x82, 0xdd, 0x51, 0x6f, 0xec, 0x5b, 0xa1, 0x9d, 0xf4, 0xef, 0x36,
+	0x77, 0xdb, 0xe0, 0x42, 0x30, 0x71, 0xef, 0xd9, 0x72, 0xca, 0xfe, 0x8d, 0x62, 0xb0, 0x59, 0x8e,
+	0xd7, 0x74, 0xc1, 0x88, 0xe7, 0xf8, 0x56, 0xe8, 0xc6, 0x2f, 0xa3, 0x5e, 0x86, 0x48, 0x6f, 0x38,
+	0x6f, 0x11, 0xc9, 0x58, 0x02, 0xe7, 0x04, 0x9d, 0x03, 0xa4, 0x58, 0xd0, 0x35, 0xaf, 0x18, 0xad,
+	0x3d, 0xf0, 0xf7, 0x43, 0x37, 0x3e, 0x32, 0x58, 0x57, 0x2a, 0x79, 0x9f, 0x18, 0x30, 0x49, 0xaa,
+	0x28, 0x16, 0x94, 0x2c, 0xb0, 0xf0, 0x5c, 0xd9, 0xea, 0xd8, 0x20, 0xfd, 0xe8, 0x04, 0x4e, 0x1c,
+	0x8d, 0x9b, 0x89, 0x96, 0xd4, 0x94, 0xa4, 0x23, 0x4d, 0x9e, 0x22, 0x69, 0x9c, 0x22, 0x11, 0x9a,
+	0x51, 0x4d, 0x7a, 0xf6, 0x14, 0x49, 0xe3, 0x66, 0x22, 0x88, 0xc0, 0xee, 0xc6, 0xfe, 0x97, 0x9f,
+	0xd2, 0xbb, 0xc1, 0x83, 0x77, 0xc1, 0x47, 0x70, 0xfa, 0x3a, 0xe8, 0x03, 0x38, 0xfd, 0x7d, 0x48,
+	0x9e, 0x1b, 0x4f, 0x23, 0x75, 0x41, 0x51, 0x77, 0x41, 0x66, 0xdb, 0x1e, 0x1c, 0xcc, 0xe0, 0xc5,
+	0x8c, 0x10, 0x2d, 0x73, 0x42, 0x6f, 0x1b, 0x5a, 0x0b, 0xf4, 0x1e, 0xc6, 0xa5, 0x8a, 0xe8, 0x62,
+	0x68, 0xd7, 0x92, 0xa4, 0x83, 0x04, 0xdf, 0x00, 0x99, 0x25, 0xea, 0x92, 0x17, 0x35, 0x45, 0x17,
+	0xf0, 0xbc, 0x93, 0xfb, 0xff, 0xb5, 0x0e, 0x35, 0x54, 0xbf, 0x83, 0x0b, 0x98, 0x98, 0xce, 0xef,
+	0x08, 0xf2, 0x0a, 0x1c, 0x75, 0x34, 0x4d, 0x95, 0x69, 0x55, 0xd4, 0x15, 0xdd, 0x54, 0x59, 0xb0,
+	0x01, 0x74, 0x53, 0x66, 0x1c, 0x13, 0x75, 0x35, 0x7a, 0xa7, 0x77, 0x30, 0x64, 0xc5, 0x8a, 0xeb,
+	0x21, 0x4c, 0x3b, 0x24, 0x6c, 0x5e, 0xac, 0xf8, 0xf5, 0x5e, 0x22, 0x31, 0xe8, 0x14, 0x5c, 0x55,
+	0x3e, 0xfd, 0xdd, 0x14, 0x1b, 0xd9, 0x60, 0x72, 0xbd, 0x97, 0x80, 0x0c, 0x5e, 0xb5, 0xb1, 0xcb,
+	0x11, 0x0c, 0x09, 0x16, 0x38, 0xf8, 0x0c, 0x4e, 0xcf, 0x47, 0x27, 0x00, 0x7a, 0xd7, 0x45, 0x3f,
+	0xae, 0xa3, 0x23, 0x73, 0x82, 0x4e, 0x61, 0xa2, 0xca, 0xae, 0x78, 0x95, 0x63, 0xa1, 0x07, 0x57,
+	0xad, 0x3e, 0xc9, 0x50, 0x10, 0xc3, 0xd1, 0xd6, 0xec, 0x5a, 0xcc, 0xad, 0x7d, 0xad, 0xed, 0x7d,
+	0xe3, 0x5f, 0x70, 0xa8, 0xc5, 0xfa, 0x4e, 0xab, 0xbb, 0xf6, 0xff, 0x9c, 0x03, 0x3c, 0x38, 0x82,
+	0x5e, 0x1b, 0xbb, 0xee, 0x78, 0x3d, 0x3d, 0x79, 0x24, 0xab, 0x3a, 0xc7, 0x14, 0x8e, 0x4c, 0x27,
+	0xba, 0x0e, 0x5f, 0xc0, 0x35, 0xe6, 0x44, 0x66, 0x91, 0x5d, 0xed, 0xa7, 0x6f, 0x1e, 0x4b, 0xab,
+	0x26, 0xa1, 0x75, 0x69, 0xff, 0x1c, 0x11, 0x9e, 0x63, 0x56, 0x2c, 0x47, 0xf2, 0x5e, 0xcf, 0xff,
+	0x06, 0x00, 0x00, 0xff, 0xff, 0x71, 0x1b, 0xd2, 0xf1, 0x19, 0x05, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -454,5 +689,111 @@ var _ProductService_serviceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
+	Metadata: "store.proto",
+}
+
+// ProductImageServiceClient is the client API for ProductImageService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type ProductImageServiceClient interface {
+	UploadImage(ctx context.Context, opts ...grpc.CallOption) (ProductImageService_UploadImageClient, error)
+}
+
+type productImageServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewProductImageServiceClient(cc grpc.ClientConnInterface) ProductImageServiceClient {
+	return &productImageServiceClient{cc}
+}
+
+func (c *productImageServiceClient) UploadImage(ctx context.Context, opts ...grpc.CallOption) (ProductImageService_UploadImageClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_ProductImageService_serviceDesc.Streams[0], "/bookstore.ProductImageService/UploadImage", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &productImageServiceUploadImageClient{stream}
+	return x, nil
+}
+
+type ProductImageService_UploadImageClient interface {
+	Send(*UploadImageRequest) error
+	CloseAndRecv() (*UploadImageResponse, error)
+	grpc.ClientStream
+}
+
+type productImageServiceUploadImageClient struct {
+	grpc.ClientStream
+}
+
+func (x *productImageServiceUploadImageClient) Send(m *UploadImageRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *productImageServiceUploadImageClient) CloseAndRecv() (*UploadImageResponse, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(UploadImageResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// ProductImageServiceServer is the server API for ProductImageService service.
+type ProductImageServiceServer interface {
+	UploadImage(ProductImageService_UploadImageServer) error
+}
+
+// UnimplementedProductImageServiceServer can be embedded to have forward compatible implementations.
+type UnimplementedProductImageServiceServer struct {
+}
+
+func (*UnimplementedProductImageServiceServer) UploadImage(srv ProductImageService_UploadImageServer) error {
+	return status.Errorf(codes.Unimplemented, "method UploadImage not implemented")
+}
+
+func RegisterProductImageServiceServer(s *grpc.Server, srv ProductImageServiceServer) {
+	s.RegisterService(&_ProductImageService_serviceDesc, srv)
+}
+
+func _ProductImageService_UploadImage_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(ProductImageServiceServer).UploadImage(&productImageServiceUploadImageServer{stream})
+}
+
+type ProductImageService_UploadImageServer interface {
+	SendAndClose(*UploadImageResponse) error
+	Recv() (*UploadImageRequest, error)
+	grpc.ServerStream
+}
+
+type productImageServiceUploadImageServer struct {
+	grpc.ServerStream
+}
+
+func (x *productImageServiceUploadImageServer) SendAndClose(m *UploadImageResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *productImageServiceUploadImageServer) Recv() (*UploadImageRequest, error) {
+	m := new(UploadImageRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+var _ProductImageService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "bookstore.ProductImageService",
+	HandlerType: (*ProductImageServiceServer)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "UploadImage",
+			Handler:       _ProductImageService_UploadImage_Handler,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "store.proto",
 }
