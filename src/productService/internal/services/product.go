@@ -9,12 +9,11 @@ import (
 
 // ProductService is an implementation of ProductServiceServer gRPC service.
 type ProductService struct {
-	// datastore
-	store repo.ProductRepository
+	store repo.ProductRepository // product datastore
 }
 
 // NewProductService creates a new product service.
-func NewProductService(r repo.ProductRepository) *ProductService {
+func NewProductService(r repo.ProductRepository, ) *ProductService {
 	return &ProductService{store: r}
 }
 

@@ -9,17 +9,21 @@ import "google/protobuf/timestamp.proto";
 /* set where the generate Go code will be placed */
 option go_package = "domain";
 
-// ---------------Product Catalog---------------------------------------------------
+// ---------------Product---------------------------------------------------
 
 // ProductService definition to handle our products.
 service ProductService {
   rpc AddProduct (AddProductRequest) returns (AddProductResponse);
+  // rpc UpdateProduct (UpdateProductRequest) returns (UpdateProductResponse);
 }
 
 message Product {
   // @inject_tag: gorm:"primaryKey;autoIncrement"
   uint64 id = 1;
-  // @inject_tag: gorm:"type:uuid;unique;default:uuid_generate_v4();not null"
+  // @inject_tag: gorm:"type:uuid;unique;default:uuid_generate_v4()"
+
+  // protobuf doesn't have support for UUID yet.
+  // https://github.com/protocolbuffers/protobuf/issues/2224
   string uuid = 2;
   string name = 3;
   string description = 4;
@@ -27,7 +31,10 @@ message Product {
   string slug = 6;
   bool inactive = 7;
   uint64 quantity = 8;
-  string image_url = 9;
+
+  // Product will have a one-to-one relationship with product image
+  // @inject_tag: `gorm:"foreignKey;"`
+  ProductImage image_id = 9;
 
   // We need to have an array of categories that can be used to search a product
   // @inject_tag: `gorm:"many2many:product_categories;"`
@@ -42,7 +49,7 @@ message Product {
 }
 
 message Category {
-  // @inject_tag: gorm:"primaryKey"
+ // @inject_tag: gorm:"primaryKey;autoIncrement"
   uint64 id = 1;
   string name = 2;
 }
@@ -59,3 +66,45 @@ message AddProductResponse {
   Product created_product = 1;
 }
 
+// message UpdateProductRequest {
+//   Product product = 1;
+// }
+
+// message UpdateProductResponse {
+//   Product updated_product = 1;
+// }
+
+// ---------------Product Image---------------------------------------------------
+// ProductImageService definition to handle our products images.
+service ProductImageService {
+  rpc UploadImage (stream UploadImageRequest) returns (UploadImageResponse);
+}
+
+message ProductImage {
+  // @inject_tag: gorm:"primaryKey;autoIncrement"
+  uint64 id = 1;
+  string image_url = 2;
+}
+
+/*
+The idea is to divide the image file into multiple chunks, and send them
+one by one to the server in each request message. We use a oneof field
+here because the first request will only contain the metadata i .e the product id
+the image belongs to and the image data. Then the following requests will contain
+the image data chunks.
+*/
+message UploadImageRequest {
+  oneof data {
+    ImageInfo info = 1;
+    bytes image_chunk = 2;
+  }
+}
+
+message ImageInfo {
+  uint64 product_id = 1;
+  string image_format = 2;
+}
+
+message UploadImageResponse {
+  string image_url = 1;
+}

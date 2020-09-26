@@ -8,6 +8,7 @@ import (
 	"os"
 	"productservice/internal/datastore/migrations"
 	"productservice/internal/datastore/postgres"
+	"productservice/internal/datastore/image"
 	"productservice/internal/domain"
 	"productservice/internal/services"
 
@@ -63,10 +64,15 @@ func run() error {
 	prodStore := postgres.NewProductStore(db)
 	// new product service
 	srv := services.NewProductService(prodStore)
+	// image store and service
+	imgStore := image.NewDiskStore("productImg")
+	imgSrv := services.NewProductImageService(imgStore)
 	// create grpc server
 	s := grpc.NewServer()
 	// register the ProductService implementation
 	domain.RegisterProductServiceServer(s, srv)
+	// register the image service
+	domain.RegisterProductImageServiceServer(s, imgSrv)
 
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
